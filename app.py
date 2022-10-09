@@ -7,14 +7,35 @@ import time
 import os
 from numpy.linalg import norm
 
+
 # formatting, create 3 columns
-col1, col2, col3 = st.columns([1,0.25,1])
+col1, col2  = st.columns([0.75,1])
 
 # Title
-col1.markdown(" # Airbnb Recommendations")
+title = '<p style="color:#FF5A5F; font-size: 50px;">Airbnb Recommendations</p>'
+col2.markdown(title, unsafe_allow_html = True)
 
 # Subtitle
-col1.markdown(" Select an Airbnb listing and get a recommendation for similar listings.")
+subtitle = '<p style="color:#767676; font-size: 20px;">Select an Airbnb listing and get a recommendation for similar listings.</p>'
+col2.markdown(subtitle, unsafe_allow_html = True)
+
+# add image
+col1.image("https://images.unsplash.com/photo-1593970107436-6b5c6f8f1138?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80", use_column_width= 'always')
+
+# Disclaimer
+with st.expander("How to use this:"):
+    st.write('What is this?')
+    st.caption("Airbnb is an online marketplace that is focussed on connecting people who rent out their homes with people who are looking for accommodations around the world. If you're like me and love to travel, Airbnb provides a cheaper alternative to hotels while also offering an eccentric experience that adds value to vacations.")
+    st.caption("I personally love traveling to the west coast and finding unique Airbnb listings. Sometimes I'd find myself wanting to go back but have trouble looking for a similar experience. There is currently no system in place where Airbnb will provide (or recommend) similar homes I have previously stayed in.")
+    st.caption('**With this premise, I was developed a web application that provides recommendations for Airbnb listings and similar listings based on user input.**')
+
+    st.write("Data Source")
+    st.caption("San Diego is a city that I frequently visit on the west coast. Therfore, I was compelled to work on a dataset of Airbnb listings within the area.\
+        The dataset for this project consists of over 13,000 rows of data for San Diego Airbnb Listings as of August 2019 and publicly sourced from data.world via Inside Airbnb.")
+    
+    st.write("Disclaimer")
+    st.caption("All content and information on this application is for informational and educational purposes only and is not directly affiliated with Airbnb in any way.")
+
 
 ## UPLOAD THE DATAFRAMES ##
 # ----------------------------------------------- #
@@ -114,7 +135,7 @@ def get_recommendations(df, listing):
     selection = st.dataframe(rec.sort_values(by = ['Similarity Score'], ascending = False)[0:1])
     
     if selection: 
-        st.write("We recommend booking at these similar stays:")
+        st.write("Suggestions at these similar stays:")
 
     # sort by top 5 descending
     recommended_listings = st.dataframe(rec.sort_values(by = ['Similarity Score'], ascending = False)[1:6])
@@ -130,6 +151,9 @@ get_recommendations(sd_pp, selected_listing_df)
 # load in the simplified dataset
 sd_simplified = pd.read_csv('sd_simplified', index_col = 0)
 
+# header
+st.markdown(" ### Choose your own listing")
+st.markdown("Using the dropdown menus and sliders below, select your personalized stay:")
 
 ## GET USER INPUTS ## 
 # ----------------------------------------------- #
@@ -159,48 +183,48 @@ user_inputs = pd.DataFrame([neighborhood, property, room, accommodation, bathroo
 sd_simplified_pp = pd.Dataframe(ct.fit_transform(sd_simplified))
 
 
-# ## GET RECOMMENDATION BASED ON USER INPUTS ##
-# # ----------------------------------------------- #
+## GET RECOMMENDATION BASED ON USER INPUTS ##
+# ----------------------------------------------- #
 
-# def get_simplified_recommendations(df, user_inputs):
-#     """
-#     Takes in preprocessed dataframe and preprocessed user inputs df and gives top 5
-#     recommendations based on cosine similarity. 
-#     """
-#     # reset the index
-#     df = df.reset_index(drop = 'index')
+def get_simplified_recommendations(df, user_inputs):
+    """
+    Takes in preprocessed dataframe and preprocessed user inputs df and gives top 5
+    recommendations based on cosine similarity. 
+    """
+    # reset the index
+    df = df.reset_index(drop = 'index')
     
-#     # transform the user_inputs dataframe into preprocessed dataset
-#     user_inputs_df_pp = pd.DataFrame(ct.transform(user_inputs))
+    # transform the user_inputs dataframe into preprocessed dataset
+    user_inputs_df_pp = pd.DataFrame(ct.transform(user_inputs))
     
-#     # convert single listing to an array
-#     listing_array = user_inputs_df_pp.values
-#     # convert all listings to an array
-#     df_array = df.values
+    # convert single listing to an array
+    listing_array = user_inputs_df_pp.values
+    # convert all listings to an array
+    df_array = df.values
     
-#     # get arrays into a single dimension
-#     A = np.squeeze(np.asarray(df_array))
-#     B = np.squeeze(np.asarray(listing_array))
+    # get arrays into a single dimension
+    A = np.squeeze(np.asarray(df_array))
+    B = np.squeeze(np.asarray(listing_array))
     
-#     # compute cosine similarity 
-#     cosine = np.dot(A,B)/(norm(A, axis = 1)*norm(B))
+    # compute cosine similarity 
+    cosine = np.dot(A,B)/(norm(A, axis = 1)*norm(B))
     
-#     # add similarity into recommendations df and reset the index
-#     rec = sd_simplified.copy().reset_index(drop = 'index')
-#     rec['similarity'] = pd.DataFrame(cosine).values
+    # add similarity into recommendations df and reset the index
+    rec = sd_simplified.copy().reset_index(drop = 'index')
+    rec['similarity'] = pd.DataFrame(cosine).values
     
-#     # add in listings_urls
-#     # merge on index
-#     rec = rec.join(sd_listings_url)
+    # add in listings_urls
+    # merge on index
+    rec = rec.join(sd_listings_url)
     
-#     # reorder column names
-#     rec = rec[['listing_url', 'similarity', 'neighbourhood_cleansed', 'property_type', 
-#                'room_type', 'accommodates', 'bathrooms', 'beds', 'nightly_price', 'review_scores_rating']]
+    # reorder column names
+    rec = rec[['listing_url', 'similarity', 'neighbourhood_cleansed', 'property_type', 
+               'room_type', 'accommodates', 'bathrooms', 'beds', 'nightly_price', 'review_scores_rating']]
     
-#     # sort by top 5 descending
-#     return rec.sort_values(by = ['similarity'], ascending = False).head(5)
+    # sort by top 5 descending
+    return rec.sort_values(by = ['similarity'], ascending = False).head(5)
 
-# # get recommendation
-# get_simplified_recommendations(sd_simplified_pp, user_inputs)
+# get recommendation
+get_simplified_recommendations(sd_simplified_pp, user_inputs)
 
 
