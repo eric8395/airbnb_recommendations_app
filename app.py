@@ -16,7 +16,7 @@ col1, col2  = st.columns([0.75,1])
 col2.title('Airbnb Recommendations')
 
 # Subtitle
-subtitle = '<p style="color:#FF5A5F; font-size: 23px;">Select an Airbnb listing and get a recommendation for similar listings!</p>'
+subtitle = '<p style="color:#FF5A5F; font-size: 23px;">Select an Airbnb listing and get a recommendation for similar listings in San Diego!</p>'
 col2.markdown(subtitle, unsafe_allow_html = True)
 
 # add image
