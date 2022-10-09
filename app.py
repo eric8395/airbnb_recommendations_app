@@ -1,6 +1,7 @@
 import numpy as np
 from pickle import load
 import pandas as pd
+import sklearn
 import streamlit as st
 import time
 import os
