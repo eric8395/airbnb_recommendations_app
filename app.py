@@ -18,44 +18,44 @@ col1.markdown(" Select an Airbnb listing and get a recommendation for similar li
 ## UPLOAD THE DATAFRAMES ##
 # ----------------------------------------------- #
 
-# # load in sd_trans dataframe to be transformed
+# load in sd_trans dataframe to be transformed
 sd_trans = pd.read_csv('sd_trans.csv', index_col = 0)
 
-# # load in url_listings dataframe to be joined
-# sd_listings_url = pd.read_csv('url_listings', index_col = 0)
+# load in url_listings dataframe to be joined
+sd_listings_url = pd.read_csv('url_listings', index_col = 0)
 
-# ## UPLOAD THE SELECTION DFS ## 
-# # ----------------------------------------------- #
+## UPLOAD THE SELECTION DFS ## 
+# ----------------------------------------------- #
 
-# # load in sd_pp, FOR SELECTION OF URL WITHIN THE PREPROCESSED DF
-# sd_pp = pd.read_csv('sd_pp', index_col = 0)
+# load in sd_pp, FOR SELECTION OF URL WITHIN THE PREPROCESSED DF
+sd_pp = pd.read_csv('sd_pp', index_col = 0)
 
-# # load in sd_clustered
-# sd_clustered = pd.read_csv('sd_clustered', index_col = 0)
+# load in sd_clustered
+sd_clustered = pd.read_csv('sd_clustered', index_col = 0)
 
-# # merge url listings with sd_trans
-# sd_merged = sd_listings_url.join(sd_trans)
+# merge url listings with sd_trans
+sd_merged = sd_listings_url.join(sd_trans)
 
-# ## GET URL LISTING FROM PP DATASET ##
-# # ----------------------------------------------- #
-# # SELECT THE LISTING FROM UNPROCESSED DATASET 
-# # get sd_clustered and merge with urls on index
-# sd_clustered = sd_clustered.join(sd_listings_url)
+## GET URL LISTING FROM PP DATASET ##
+# ----------------------------------------------- #
+# SELECT THE LISTING FROM UNPROCESSED DATASET 
+# get sd_clustered and merge with urls on index
+sd_clustered = sd_clustered.join(sd_listings_url)
 
-# # select a listing from sd_merged
-# selected_listing = st.selectbox("Choose a listing below:", sd_merged.listing_url)
+# select a listing from sd_merged
+selected_listing = st.selectbox("Choose a listing below:", sd_merged.listing_url)
 
-# # based on selected listing, get the index from sd_pp
-# index_value = sd_merged.listing_url[sd_merged.listing_url == str(selected_listing)].index[0]
-# selected_listing_df = pd.DataFrame(sd_pp.iloc[index_value]).T
+# based on selected listing, get the index from sd_pp
+index_value = sd_merged.listing_url[sd_merged.listing_url == str(selected_listing)].index[0]
+selected_listing_df = pd.DataFrame(sd_pp.iloc[index_value]).T
 
-# ## TRANSFORMS THE DATASET INTO A PREPROCESSED SET ## 
-# # ----------------------------------------------- #
-# # # unpickle and load in column transformer
-# # ct = joblib.load("column_transformer.pkl")
+## TRANSFORMS THE DATASET INTO A PREPROCESSED SET ## 
+# ----------------------------------------------- #
+# # unpickle and load in column transformer
+# ct = joblib.load("column_transformer.pkl")
 
-# with open('column_transformer.pkl', 'rb') as f:
-#     ct = pickle.load(f)
+with open('column_transformer.pkl', 'rb') as f:
+    ct = pickle.load(f)
 
 # ## GET RECOMMENDATION BASED ON SELECTED LISTING ##
 # # ----------------------------------------------- #
