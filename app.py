@@ -12,11 +12,11 @@ from numpy.linalg import norm
 col1, col2  = st.columns([0.75,1])
 
 # Title
-title = '<p style="color:#FF5A5F; font-size: 50px;">Airbnb Recommendations</p>'
-col2.markdown(title, unsafe_allow_html = True)
+
+col2.title('Airbnb Recommendations')
 
 # Subtitle
-subtitle = '<p style="color:#767676; font-size: 20px;">Select an Airbnb listing and get a recommendation for similar listings.</p>'
+subtitle = '<p style="color:#FF5A5F; font-size: 23px;">Select an Airbnb listing and get a recommendation for similar listings!</p>'
 col2.markdown(subtitle, unsafe_allow_html = True)
 
 # add image
@@ -135,7 +135,7 @@ def get_recommendations(df, listing):
     selection = st.dataframe(rec.sort_values(by = ['Similarity Score'], ascending = False)[0:1])
     
     if selection: 
-        st.write("Suggestions at these similar stays:")
+        st.write("Recommended similar stays:")
 
     # sort by top 5 descending
     recommended_listings = st.dataframe(rec.sort_values(by = ['Similarity Score'], ascending = False)[1:6])
