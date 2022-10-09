@@ -1,5 +1,5 @@
 import numpy as np
-import pickle
+from pickle import load
 import pandas as pd
 import streamlit as st
 import time
@@ -51,11 +51,8 @@ selected_listing_df = pd.DataFrame(sd_pp.iloc[index_value]).T
 
 ## TRANSFORMS THE DATASET INTO A PREPROCESSED SET ## 
 # ----------------------------------------------- #
-# # unpickle and load in column transformer
-# ct = joblib.load("column_transformer.pkl")
-
-with open('column_transformer.pkl', 'rb') as f:
-    ct = pickle.load(f)
+# unpickle and load in column transformer
+ct = load(open("column_transformer.pkl", 'rb'))
 
 # ## GET RECOMMENDATION BASED ON SELECTED LISTING ##
 # # ----------------------------------------------- #
