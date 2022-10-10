@@ -45,16 +45,16 @@ with st.expander("About This App"):
 sd_trans = pd.read_csv('sd_trans.csv', index_col = 0)
 
 # load in url_listings dataframe to be joined
-sd_listings_url = pd.read_csv('url_listings', index_col = 0)
+sd_listings_url = pd.read_csv('url_listings.csv', index_col = 0)
 
 ## UPLOAD THE SELECTION DFS ## 
 # ----------------------------------------------- #
 
 # load in sd_pp, FOR SELECTION OF URL WITHIN THE PREPROCESSED DF
-sd_pp = pd.read_csv('sd_pp', index_col = 0)
+sd_pp = pd.read_csv('sd_pp.csv', index_col = 0)
 
 # load in sd_clustered
-sd_clustered = pd.read_csv('sd_clustered', index_col = 0)
+sd_clustered = pd.read_csv('sd_clustered.csv', index_col = 0)
 
 # merge url listings with sd_trans
 sd_merged = sd_listings_url.join(sd_trans)
@@ -150,7 +150,7 @@ get_recommendations(sd_pp, selected_listing_df)
 # ----------------------------------------------- #
 
 # load in the simplified dataset
-sd_simplified = pd.read_csv('sd_simplified', index_col = 0)
+sd_simplified = pd.read_csv('sd_simplified.csv', index_col = 0)
 
 
 # formatting, create 3 columns
