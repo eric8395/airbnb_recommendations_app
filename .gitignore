@@ -7,8 +7,10 @@ __pycache__/
 *.so
 
 # Ignore pickles
-
 *.pkl
+
+# Ignore csvs
+*.csv
 
 # Ignore images
 *.png
