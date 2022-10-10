@@ -12,21 +12,23 @@ col1, col2  = st.columns([0.75,1])
 
 # Title
 
-col2.title('Airbnb Recommendations')
+col2.title('Discover San Diego!')
 
 # Subtitle
-subtitle = '<p style="color:#FF5A5F; font-size: 23px;">Select an Airbnb listing and get a recommendation for similar listings in San Diego!</p>'
+subtitle = '<p style="color:#FF5A5F; font-size: 23px;">Select an Airbnb listing and get recommendations for similar listings in San Diego</p>'
 col2.markdown(subtitle, unsafe_allow_html = True)
+col2.caption("Built by Eric Au | Github: @eric8395 | LinkedIn: www.linkedin.com/in/eric-au8395/")
 
 # add image
-col1.image("https://images.unsplash.com/photo-1593970107436-6b5c6f8f1138?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80", use_column_width= 'always')
+col1.image("https://images.unsplash.com/photo-1593970107436-6b5c6f8f1138?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80", use_column_width= 'always', caption = "Photo Credit Jermaine Ee via Unsplash")
 
 # Disclaimer
 with st.expander("About This App"):
     st.write("What is this?")
     st.caption("Airbnb is an online marketplace that is focussed on connecting people who rent out their homes with people who are looking for accommodations around the world. If you're like me and love to travel, Airbnb provides a cheaper alternative to hotels while also offering an eccentric experience that adds value to vacations.")
     st.caption("I personally love traveling to the west coast and finding unique Airbnb listings. Sometimes I'd find myself wanting to go back but have trouble looking for a similar experience. There is currently no system in place where Airbnb will provide (or recommend) similar homes I have previously stayed in.")
-    st.caption('**With this premise, I developed a web application that provides recommendations for Airbnb listings and similar listings based on user input.**')
+    st.caption('**With this premise, I developed a web application that provides recommendations for San Diego Airbnb listings and similar listings based on user input.**')
+    st.caption("For more information on how I built this recommendation system, feel free to check out my Github here: https://github.com/eric8395/airbnb_recommendations")
 
     st.write("Data Source")
     st.caption("San Diego is a city that I frequently visit on the west coast. Therefore, I was compelled to work on a dataset of Airbnb listings within the area.\
@@ -150,9 +152,18 @@ get_recommendations(sd_pp, selected_listing_df)
 # load in the simplified dataset
 sd_simplified = pd.read_csv('sd_simplified', index_col = 0)
 
+
+# formatting, create 3 columns
+col3, col4  = st.columns([1,0.95])
+
 # header
-st.markdown(" ### Personalize Your Stay!")
-st.markdown("Using the dropdown menus and sliders below, get recommendations for your perfect getaway:")
+col3.markdown(" ### Personalize Your Stay!")
+# add image
+col4.image("https://images.unsplash.com/photo-1617142584114-730e9bda61b2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80", width = 410, caption = "Photo Credit Andres Garcia via Unsplash")
+# subtitle markdown
+# Subtitle
+subtitle2 = '<p style="color:#FF5A5F; font-size: 20px;">Using the dropdown menus and sliders below, get recommendations for your perfect getaway</p>'
+col3.markdown(subtitle2, unsafe_allow_html = True)
 
 ## GET USER INPUTS ## 
 # ----------------------------------------------- #
@@ -231,7 +242,7 @@ def get_simplified_recommendations(df, user_inputs):
     return st.dataframe(rec.sort_values(by = ['Similarity Score'], ascending = False).head(5))
 
 # get recommendations if button is pressed
-if st.button("Submit"):
+if st.button("Take Me Away!"):
     
     # store inputs into df
     column_names = ['Neighborhood', 'Property Type', 'Room Type', 'Accommodation', 'Bathrooms', 
@@ -245,6 +256,7 @@ if st.button("Submit"):
     # transform the simplified dataset
     sd_simplified_pp = pd.DataFrame(simple_ct.fit_transform(sd_simplified))
 
+    st.markdown("#### Recommendations based on your selections:")
     get_simplified_recommendations(sd_simplified_pp, user_inputs)
 
 
