@@ -42,7 +42,7 @@ with st.expander("About This App"):
 # ----------------------------------------------- #
 
 # load in sd_trans dataframe to be transformed
-sd_trans = pd.read_csv('sd_trans.csv', index_col = 0)
+sd_trans = pd.read_csv('sd_trans', index_col = 0)
 
 # load in url_listings dataframe to be joined
 sd_listings_url = pd.read_csv('url_listings.csv', index_col = 0)
