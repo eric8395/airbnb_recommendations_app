@@ -22,14 +22,14 @@ col2.markdown(subtitle, unsafe_allow_html = True)
 col1.image("https://images.unsplash.com/photo-1593970107436-6b5c6f8f1138?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80", use_column_width= 'always')
 
 # Disclaimer
-with st.expander("How to use this:"):
-    st.write('What is this?')
+with st.expander("About This App"):
+    st.write("What is this?")
     st.caption("Airbnb is an online marketplace that is focussed on connecting people who rent out their homes with people who are looking for accommodations around the world. If you're like me and love to travel, Airbnb provides a cheaper alternative to hotels while also offering an eccentric experience that adds value to vacations.")
     st.caption("I personally love traveling to the west coast and finding unique Airbnb listings. Sometimes I'd find myself wanting to go back but have trouble looking for a similar experience. There is currently no system in place where Airbnb will provide (or recommend) similar homes I have previously stayed in.")
-    st.caption('**With this premise, I was developed a web application that provides recommendations for Airbnb listings and similar listings based on user input.**')
+    st.caption('**With this premise, I developed a web application that provides recommendations for Airbnb listings and similar listings based on user input.**')
 
     st.write("Data Source")
-    st.caption("San Diego is a city that I frequently visit on the west coast. Therfore, I was compelled to work on a dataset of Airbnb listings within the area.\
+    st.caption("San Diego is a city that I frequently visit on the west coast. Therefore, I was compelled to work on a dataset of Airbnb listings within the area.\
         The dataset for this project consists of over 13,000 rows of data for San Diego Airbnb Listings as of August 2019 and publicly sourced from data.world via Inside Airbnb.")
     
     st.write("Disclaimer")
@@ -151,8 +151,8 @@ get_recommendations(sd_pp, selected_listing_df)
 sd_simplified = pd.read_csv('sd_simplified', index_col = 0)
 
 # header
-st.markdown(" ### Choose your own listing")
-st.markdown("Using the dropdown menus and sliders below, select your personalized stay:")
+st.markdown(" ### Personalize Your Stay!")
+st.markdown("Using the dropdown menus and sliders below, get recommendations for your perfect getaway:")
 
 ## GET USER INPUTS ## 
 # ----------------------------------------------- #
@@ -160,8 +160,12 @@ neighborhood = st.selectbox('Neighborhood:',(sd_simplified['neighbourhood_cleans
 property = st.selectbox('Property Type:',(sd_simplified['property_type'].unique()))
 room = st.selectbox('Room Type:',(sd_simplified['room_type'].unique()))
 accommodation = st.selectbox('Accommodation:',(sd_simplified['accommodates'].unique()))
-bathrooms = st.number_input("Bathrooms:")
-beds = st.number_input("Beds:")
+bathrooms = st.number_input("Bathrooms:",
+                            min_value = 1,
+                            max_value = 10)
+beds = st.number_input("Beds:",
+                        min_value = 1,
+                        max_value = 10)
 price = st.slider('Minimum Nightly Price ($):', int(sd_simplified['nightly_price'].quantile(0.05).item()),  # min
                                             int(sd_simplified['nightly_price'].quantile(0.85).item()),  # max
                                             int(sd_simplified['nightly_price'].median().item()),
