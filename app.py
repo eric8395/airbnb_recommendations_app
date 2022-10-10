@@ -162,8 +162,8 @@ room = st.selectbox('Room Type:',(sd_simplified['room_type'].unique()))
 accommodation = st.selectbox('Accommodation:',(sd_simplified['accommodates'].unique()))
 bathrooms = st.number_input("Bathrooms:")
 beds = st.number_input("Beds:")
-price = st.slider('Minimum Nightly Price ($):', int(sd_simplified['nightly_price'].min().item()),  # min
-                                            int(sd_simplified['nightly_price'].quantile(0.75).item()),  # max
+price = st.slider('Minimum Nightly Price ($):', int(sd_simplified['nightly_price'].quantile(0.05).item()),  # min
+                                            int(sd_simplified['nightly_price'].quantile(0.85).item()),  # max
                                             int(sd_simplified['nightly_price'].median().item()),
                                             step = 1) # start point
 
