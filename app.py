@@ -172,20 +172,6 @@ rating = st.slider('Minimum Rating:',  int(sd_simplified['review_scores_rating']
                                             90, # start at 90
                                             step = 1) # start point
 
-# if button is pressed
-if st.button("Submit"):
-    
-    # store inputs into df
-    column_names = ['Neighborhood', 'Property Type', 'Room Type', 'Accommodation', 'Bathrooms', 
-                'Number of Beds', 'Minimum Nightly Price ($)', 'Minimum Rating']
-    
-    user_inputs = pd.DataFrame([[neighborhood, property, room, accommodation, bathrooms, beds, price, rating]], 
-                            columns = sd_simplified.columns)
-
-st.dataframe(user_inputs)
-
-# transform the simplified dataset
-sd_simplified_pp = pd.DataFrame(ct.fit_transform(sd_simplified))
 
 ## GET RECOMMENDATION BASED ON USER INPUTS ##
 # ----------------------------------------------- #
@@ -196,40 +182,65 @@ def get_simplified_recommendations(df, user_inputs):
     recommendations based on cosine similarity. 
     """
     # reset the index
-    # df = df.reset_index(drop = 'index')
+    df = df.reset_index(drop = 'index')
     
     # transform the user_inputs dataframe into preprocessed dataset
-    user_inputs_df_pp = pd.DataFrame(ct.transform(user_inputs))
+    user_inputs_df_pp = pd.DataFrame(simple_ct.transform(user_inputs))
     
-    # # convert single listing to an array
-    # listing_array = user_inputs_df_pp.values
+    # convert single listing to an array
+    listing_array = user_inputs_df_pp.values
 
-    # # convert all listings to an array
-    # df_array = df.values
+    # convert all listings to an array
+    df_array = df.values
     
-    # # get arrays into a single dimension
-    # A = np.squeeze(np.asarray(df_array))
-    # B = np.squeeze(np.asarray(listing_array))
+    # get arrays into a single dimension
+    A = np.squeeze(np.asarray(df_array))
+    B = np.squeeze(np.asarray(listing_array))
     
-    # # compute cosine similarity 
-    # cosine = np.dot(A,B)/(norm(A, axis = 1)*norm(B))
+    # compute cosine similarity 
+    cosine = np.dot(A,B)/(norm(A, axis = 1)*norm(B))
     
-    # # add similarity into recommendations df and reset the index
-    # rec = sd_simplified.copy().reset_index(drop = 'index')
-    # rec['similarity'] = pd.DataFrame(cosine).values
+    # add similarity into recommendations df and reset the index
+    rec = sd_simplified.copy().reset_index(drop = 'index')
+    rec['similarity'] = pd.DataFrame(cosine).values
     
-    # # add in listings_urls
-    # # merge on index
-    # rec = rec.join(sd_listings_url)
+    # add in listings_urls
+    # merge on index
+    rec = rec.join(sd_listings_url)
     
-    # # reorder column names
-    # # rec = rec[['listing_url', 'similarity', 'neighbourhood_cleansed', 'property_type', 
-    # #            'room_type', 'accommodates', 'bathrooms', 'beds', 'nightly_price', 'review_scores_rating']]
+    # reorder column names
+    rec = rec[['listing_url', 'similarity', 'neighbourhood_cleansed', 'property_type', 
+                'room_type', 'accommodates', 'bathrooms', 'beds', 'nightly_price', 'review_scores_rating']]
     
-    # # sort by top 5 descending
-    # return rec.sort_values(by = ['similarity'], ascending = False).head(5)
+    rec = rec.rename(columns = {'listing_url': 'URL', 
+                                'similarity': 'Similarity Score',
+                                'neighbourhood_cleansed': 'Neighborhood',
+                                'property_type': 'Property Type',
+                                'room_type': 'Room Type',
+                                'accommodates': 'Accommodates',
+                                'bathrooms': ' Bathrooms',
+                                'beds': 'Beds',
+                                'nightly_price': 'Nightly Price',
+                                'review_scores_rating': 'Review Rating'})
 
-# get recommendation
-get_simplified_recommendations(sd_simplified_pp, user_inputs)
+    # sort by top 5 descending
+    return st.dataframe(rec.sort_values(by = ['Similarity Score'], ascending = False).head(5))
+
+# get recommendations if button is pressed
+if st.button("Submit"):
+    
+    # store inputs into df
+    column_names = ['Neighborhood', 'Property Type', 'Room Type', 'Accommodation', 'Bathrooms', 
+                'Number of Beds', 'Minimum Nightly Price ($)', 'Minimum Rating']
+    
+    user_inputs = pd.DataFrame([[neighborhood, property, room, accommodation, bathrooms, beds, price, rating]], 
+                            columns = sd_simplified.columns)
+    
+    # unpickle and load in the SIMPLE column transformer
+    simple_ct = load(open("simple_column_transformer.pkl", 'rb'))
+    # transform the simplified dataset
+    sd_simplified_pp = pd.DataFrame(simple_ct.fit_transform(sd_simplified))
+
+    get_simplified_recommendations(sd_simplified_pp, user_inputs)
 
 
