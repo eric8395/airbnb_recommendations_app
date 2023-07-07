@@ -13,6 +13,9 @@ __pycache__/
 images/
 /images
 
+#ignore pkls
+*.pkl
+
 # Distribution / packaging
 .Python
 build/
